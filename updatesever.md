@@ -24,11 +24,15 @@ If the directory doesn't exist yet, first create it:
 # Create directory on server
 ssh konnor@76.135.164.17 "mkdir -p /var/www/konnorkooi.com/quiz-app"
 
+# remove files on the server if needed 
+ssh konnor@76.135.164.17 "rm /var/www/konnorkooi.com/quiz-app/*"
+
 # Then copy files
 scp -r ./* konnor@76.135.164.17:/var/www/konnorkooi.com/quiz-app/
 ```
 
-
+### Restart apache if needed
+sudo systemctl restart apache2
 
 ### Set Permissions
 After copying, set the correct permissions:
