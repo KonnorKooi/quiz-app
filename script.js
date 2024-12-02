@@ -2,6 +2,7 @@ let questions = null;
 let currentQuestion = 0;
 let score = 0;
 let selectedAnswer = null;
+let userAnswers = []; // Array to store user's answers
 
 const sampleJson = {
     questions: [
@@ -41,6 +42,7 @@ function handleJsonSubmit() {
             currentQuestion = 0;
             score = 0;
             selectedAnswer = null;
+            userAnswers = new Array(questions.length).fill(null); // Initialize user answers array
             showQuizScreen();
             renderQuestion();
         } else {
@@ -54,6 +56,7 @@ function handleJsonSubmit() {
 function handleAnswer(selectedIndex) {
     if (selectedAnswer !== null) return;
     selectedAnswer = selectedIndex;
+    userAnswers[currentQuestion] = selectedIndex; // Store user's answer
     
     const question = questions[currentQuestion];
     const correct = question.correctAnswer === selectedIndex;
@@ -108,11 +111,51 @@ function renderQuestion() {
     document.getElementById('next-button').classList.add('hidden');
 }
 
+function renderQuizReview() {
+    const reviewContainer = document.getElementById('quiz-review');
+    reviewContainer.innerHTML = '<h3>Quiz Review</h3>';
+
+    questions.forEach((question, qIndex) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'review-question';
+        
+        // Question text
+        const questionText = document.createElement('p');
+        questionText.className = 'review-question-text';
+        questionText.textContent = `Q${qIndex + 1}: ${question.question}`;
+        questionDiv.appendChild(questionText);
+        
+        // Options
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'review-options';
+        
+        question.options.forEach((option, oIndex) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'review-option';
+            
+            // Add appropriate classes based on correct/user answers
+            if (oIndex === question.correctAnswer) {
+                optionDiv.classList.add('correct');
+            }
+            if (userAnswers[qIndex] === oIndex) {
+                optionDiv.classList.add(oIndex === question.correctAnswer ? 'user-correct' : 'user-incorrect');
+            }
+            
+            optionDiv.textContent = option;
+            optionsDiv.appendChild(optionDiv);
+        });
+        
+        questionDiv.appendChild(optionsDiv);
+        reviewContainer.appendChild(questionDiv);
+    });
+}
+
 function resetQuiz() {
     questions = null;
     currentQuestion = 0;
     score = 0;
     selectedAnswer = null;
+    userAnswers = [];
     document.getElementById('json-input').value = '';
     showStartScreen();
 }
@@ -135,4 +178,5 @@ function showResultsScreen() {
     document.getElementById('results-screen').classList.remove('hidden');
     document.getElementById('score-text').textContent = 
         `Your score: ${score} out of ${questions.length}`;
+    renderQuizReview();
 }
