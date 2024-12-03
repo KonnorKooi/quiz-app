@@ -16,7 +16,7 @@
         "codeContext": "public class MessageProcessor extends Observable",
         "missingCode": {
           "beforePrompt": "public void setState(String state, MessagePriority priority) {",
-          "solution": "this.state = state;\nsetChanged();\nnotifyObservers(priority);\nfor(Observer observer : observers) {\n    observer.update(this, priority);\n}",
+          "solution": "this.state = state;\nsetChanged();\n}",
           "afterPrompt": "}"
         }
       },
