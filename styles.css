@@ -418,3 +418,13 @@ h3 {
 #next-button {
     background-color: #22c55e;
 }
+
+.preset-quiz-button {
+    background-color: #4f46e5;
+    margin-top: 8px;
+    width: 100%;
+}
+
+.preset-quiz-button:hover {
+    background-color: #4338ca;
+}

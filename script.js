@@ -460,3 +460,30 @@ window.onload = function() {
     // This ensures the regular quiz format is shown on initial load
     document.getElementById('json-format').textContent = JSON.stringify(sampleRegularJson, null, 2);
 };
+
+let designPatternsQuizData = null;
+
+// Function to fetch and load the design patterns quiz
+async function loadDesignPatternQuiz() {
+    try {
+        const response = await fetch('design-patterns-quiz.json');
+        const data = await response.json();
+        
+        // Set the quiz type to code
+        setQuizType('code');
+        
+        // Process the quiz data
+        questions = data.questions;
+        currentQuestion = 0;
+        score = 0;
+        selectedAnswer = null;
+        userAnswers = new Array(questions.length).fill(null);
+        
+        // Start the quiz
+        showQuizScreen();
+        renderQuestion();
+    } catch (error) {
+        console.error('Error loading design patterns quiz:', error);
+        alert('Failed to load the design patterns quiz. Please try again.');
+    }
+}

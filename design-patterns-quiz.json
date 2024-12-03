@@ -1,0 +1,154 @@
+{
+    "questions": [
+      {
+        "question": "Complete the Listener Pattern's core notification mechanism:",
+        "patternName": "Listener Pattern",
+        "codeContext": "public class Notifier",
+        "missingCode": {
+          "beforePrompt": "public void notifyListeners(String message) {",
+          "solution": "for(Listener listener : listeners) {\n    listener.notify(message);\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Observer Pattern's state change notification:",
+        "patternName": "Observer Pattern",
+        "codeContext": "public class MessageProcessor extends Observable",
+        "missingCode": {
+          "beforePrompt": "public void setState(String state, MessagePriority priority) {",
+          "solution": "this.state = state;\nsetChanged();\nnotifyObservers(priority);\nfor(Observer observer : observers) {\n    observer.update(this, priority);\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Strategy Pattern's dynamic behavior change:",
+        "patternName": "Strategy Pattern",
+        "codeContext": "public abstract class Car",
+        "missingCode": {
+          "beforePrompt": "public void setBrakeBehavior(BrakeBehavior newBehavior) {",
+          "solution": "this.brakeBehavior = newBehavior;\nif(brakeBehavior != null) {\n    brakeBehavior.brake();\n    updateBrakeSystem();\n    notifyBrakeChange();\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Adapter Pattern's core adaptation logic:",
+        "patternName": "Adapter Pattern",
+        "codeContext": "public class USToEUSmartPhoneChargerAdapter implements USSmartPhoneChargerInterface",
+        "missingCode": {
+          "beforePrompt": "public void chargeSmartPhone() {",
+          "solution": "double usVoltage = 110.0;\ndouble euVoltage = 220.0;\ndouble convertedVoltage = convertVoltage(usVoltage, euVoltage);\nif(validateVoltage(convertedVoltage)) {\n    euSmartPhoneCharger.chargeSmartPhone();\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Command Pattern's command execution chain:",
+        "patternName": "Command Pattern",
+        "codeContext": "public class ElectricSwitch",
+        "missingCode": {
+          "beforePrompt": "public void executeCommand() {",
+          "solution": "if(validateCommand(currentCommand)) {\n    commandHistory.push(currentCommand);\n    currentCommand.execute();\n    notifyCommandExecuted();\n    updateSystemState();\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the State Pattern's state transition logic:",
+        "patternName": "State Pattern",
+        "codeContext": "public class Context",
+        "missingCode": {
+          "beforePrompt": "public void changeState(State newState) {",
+          "solution": "if(validateStateTransition(currentState, newState)) {\n    currentState.onExit();\n    previousState = currentState;\n    currentState = newState;\n    currentState.onEnter();\n    notifyStateChanged();\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Proxy Pattern's lazy loading mechanism:",
+        "patternName": "Proxy Pattern",
+        "codeContext": "public class FileReaderProxy implements FileReader",
+        "missingCode": {
+          "beforePrompt": "public String readFileContent(String filename) {",
+          "solution": "if (fileContentCache == null) {\n    validateAccess(filename);\n    acquireResource();\n    try {\n        fileContentCache = realFileReader.readFileContent(filename);\n    } finally {\n        releaseResource();\n    }\n}\nreturn fileContentCache;",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Template Method Pattern's template algorithm:",
+        "patternName": "Template Method Pattern",
+        "codeContext": "public abstract class CaffeineBeverage",
+        "missingCode": {
+          "beforePrompt": "public final void prepareBeverage() {",
+          "solution": "validateIngredients();\nboilWater();\nbrew();\npourInCup();\nif(customerWantsCondiments()) {\n    addCondiments();\n}\nnotifyBeverageReady();\ncleanupPreparation();",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Singleton Pattern's thread-safe double-checked locking:",
+        "patternName": "Singleton Pattern",
+        "codeContext": "public class ThreadSafeSingleton",
+        "missingCode": {
+          "beforePrompt": "public static ThreadSafeSingleton getInstance() {",
+          "solution": "if (instance == null) {\n    synchronized (ThreadSafeSingleton.class) {\n        if (instance == null) {\n            instance = new ThreadSafeSingleton();\n            instance.init();\n        }\n    }\n}\nreturn instance;",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the MVC Pattern's controller update mechanism:",
+        "patternName": "MVC Pattern",
+        "codeContext": "public class StudentController",
+        "missingCode": {
+          "beforePrompt": "public void updateModelAndView(Student student, int score) {",
+          "solution": "validateScore(score);\nModel previousState = model.getState();\ntry {\n    model.beginTransaction();\n    model.setScore(score);\n    model.updateStudentRecord();\n    view.refreshDisplay(model.getState());\n    model.commitTransaction();\n} catch(Exception e) {\n    model.rollback(previousState);\n    view.showError(e);\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Facade Pattern's complex subsystem coordination:",
+        "patternName": "Facade Pattern",
+        "codeContext": "public class OrderProcessingFacade",
+        "missingCode": {
+          "beforePrompt": "public void processOrder(Order order) {",
+          "solution": "if(inventorySystem.checkStock(order) && paymentSystem.validatePayment(order)) {\n    try {\n        orderSystem.beginTransaction();\n        inventorySystem.reserveItems(order);\n        paymentSystem.processPayment(order);\n        shippingSystem.scheduleDelivery(order);\n        notificationSystem.sendConfirmation(order);\n        orderSystem.commitTransaction();\n    } catch(Exception e) {\n        orderSystem.rollback();\n        throw e;\n    }",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Abstract Factory Pattern's factory creation logic:",
+        "patternName": "Abstract Factory Pattern",
+        "codeContext": "public class SmartDeviceFactory",
+        "missingCode": {
+          "beforePrompt": "public static SmartDeviceFactory createFactory(DeviceType type) {",
+          "solution": "switch(type) {\n    case PHONE:\n        return new SmartPhoneFactory(getPhoneConfigs());\n    case TABLET:\n        return new TabletFactory(getTabletConfigs());\n    case WATCH:\n        return new SmartWatchFactory(getWatchConfigs());\n    default:\n        throw new UnsupportedDeviceException(type);\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Factory Method Pattern's product creation:",
+        "patternName": "Factory Method Pattern",
+        "codeContext": "public class CustomPizzaStore extends PizzaStore",
+        "missingCode": {
+          "beforePrompt": "protected Pizza createPizza(String type) {",
+          "solution": "Pizza pizza = null;\nPizzaIngredientFactory ingredientFactory = getIngredientFactory();\n\nif (type.equals(\"cheese\")) {\n    pizza = new CheesePizza(ingredientFactory);\n    pizza.setName(\"Custom Cheese Pizza\");\n} else if (type.equals(\"veggie\")) {\n    pizza = new VeggiePizza(ingredientFactory);\n    pizza.setName(\"Custom Veggie Pizza\");\n}\nreturn pizza;",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Decorator Pattern's dynamic behavior addition:",
+        "patternName": "Decorator Pattern",
+        "codeContext": "public class SecurityFeatureDecorator extends SmartPhoneDecorator",
+        "missingCode": {
+          "beforePrompt": "public void processData(String data) {",
+          "solution": "String encryptedData = encryptData(data);\nvalidateEncryption(encryptedData);\ntry {\n    smartphone.processData(encryptedData);\n    logSecurityEvent(\"Data processed securely\");\n} catch(Exception e) {\n    handleSecurityBreach(e);\n    throw new SecurityException(\"Processing failed\", e);\n} finally {\n    cleanupSecurityResources();\n}",
+          "afterPrompt": "}"
+        }
+      },
+      {
+        "question": "Complete the Composite Pattern's recursive operation:",
+        "patternName": "Composite Pattern",
+        "codeContext": "public class Directory extends FileSystemComponent",
+        "missingCode": {
+          "beforePrompt": "public long calculateSize() {",
+          "solution": "long totalSize = 0;\nfor(FileSystemComponent component : children) {\n    totalSize += component.calculateSize();\n    if(component instanceof Directory) {\n        totalSize += calculateMetadataSize();\n    }\n}\nupdateDirectoryMetadata(totalSize);\nnotifySizeChanged(totalSize);\nreturn totalSize;",
+          "afterPrompt": "}"
+        }
+      }
+    ]
+  }
