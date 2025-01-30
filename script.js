@@ -487,3 +487,27 @@ async function loadDesignPatternQuiz() {
         alert('Failed to load the design patterns quiz. Please try again.');
     }
 }
+
+async function loadAWSquiz1() {
+    try {
+        const response = await fetch('AWSquiz1.json');
+        const data = await response.json();
+        
+        // Set the quiz type to code
+        setQuizType('code');
+        
+        // Process the quiz data
+        questions = data.questions;
+        currentQuestion = 0;
+        score = 0;
+        selectedAnswer = null;
+        userAnswers = new Array(questions.length).fill(null);
+        
+        // Start the quiz
+        showQuizScreen();
+        renderQuestion();
+    } catch (error) {
+        console.error('Error loading AWS quiz:', error);
+        alert('Failed to load the AWS quiz. Please try again.');
+    }
+}
