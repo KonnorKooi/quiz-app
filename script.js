@@ -494,7 +494,7 @@ async function loadAWSquiz1() {
         const data = await response.json();
         
         // Set the quiz type to code
-        setQuizType('code');
+        setQuizType('regular');
         
         // Process the quiz data
         questions = data.questions;

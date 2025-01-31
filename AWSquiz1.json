@@ -339,57 +339,7 @@
           "Manual scaling"
         ],
         "correctAnswer": 1
-      },
-      {
-        "question": "What is the primary purpose of AWS Elastic Beanstalk?",
-        "options": [
-          "To manage IAM roles",
-          "To deploy and manage applications easily",
-          "To store data in S3",
-          "To encrypt data in transit"
-        ],
-        "correctAnswer": 1
-      },
-      {
-        "question": "Which of the following is a feature of Amazon DynamoDB?",
-        "options": [
-          "Manual scaling",
-          "NoSQL database with high performance",
-          "Supports only SQL queries",
-          "No backup options"
-        ],
-        "correctAnswer": 1
-      },
-      {
-        "question": "What is the primary purpose of AWS Lambda's synchronous invocation?",
-        "options": [
-          "Immediate response to the client",
-          "Retries on errors up to 3 times",
-          "No support for dead-letter queues",
-          "Only works with S3"
-        ],
-        "correctAnswer": 0
-      },
-      {
-        "question": "Which of the following is a feature of Amazon RDS Automated Backups?",
-        "options": [
-          "Manual backups only",
-          "Daily full backups and transaction logs every 5 minutes",
-          "No support for point-in-time recovery",
-          "Only supports MySQL"
-        ],
-        "correctAnswer": 1
-      },
-      {
-        "question": "What is the primary purpose of AWS CloudTrail?",
-        "options": [
-          "To manage IAM roles",
-          "To track user activity and API usage across AWS infrastructure",
-          "To store data in S3",
-          "To encrypt data in transit"
-        ],
-        "correctAnswer": 1
-      },
+      },   
       {
         "question": "Which of the following is a feature of Amazon EFS Infrequent Access (EFS-IA)?",
         "options": [
