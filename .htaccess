@@ -1,0 +1,30 @@
+# .htaccess file for quiz app directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Handle API requests
+    RewriteRule ^api/([^/]+)$ api/$1.php [L]
+    
+    # Ensure PHP errors don't show to users in production
+    php_flag display_errors off
+    php_value error_reporting 0
+    
+    # Set security headers
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Cache control for static assets
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico)$">
+        Header set Cache-Control "max-age=604800, public"
+    </FilesMatch>
+</IfModule>
+
+# Deny access to sensitive files
+<FilesMatch "^(database_setup\.sql)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes

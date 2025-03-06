@@ -20,6 +20,206 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+.nav-logo {
+    height: 48px;
+    width: auto;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.nav-center {
+    display: flex;
+    justify-content: center;
+    flex: 2;
+}
+
+.nav-button {
+    padding: 6px 12px;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s;
+}
+
+.nav-button:hover {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.nav-right {
+    justify-content: flex-end;
+}
+
+/* Dropdown styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 4px;
+}
+
+.dropdown-content a {
+    color: #374151;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.875rem;
+}
+
+.dropdown-content a:hover {
+    background-color: #f3f4f6;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.close-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    color: black;
+}
+
+/* Format options */
+.format-options {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.format-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: #374151;
+}
+
+/* JSON container and copy button */
+.json-container {
+    position: relative;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    color: black;
+    cursor: pointer;
+}
+
+.copy-btn:hover {
+    background-color: #f3f4f6;
+}
+
+.tooltip {
+    font-size: 0.75rem;
+}
+
+/* Question navigation controls */
+.confetti-btn.blue {
+    background-color: #3b82f6;
+}
+
+.confetti-btn.blue:hover {
+    background-color: #2563eb;
+}
+
+.confetti-section {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.confetti-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.confetti-dropdown, .question-nav-dropdown {
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    font-size: 0.875rem;
+}
+
+
+.question-nav-dropdown {
+    min-width: 200px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+}
+
+
 .screen {
     display: flex;
     flex-direction: column;
@@ -216,14 +416,13 @@ h3 {
     text-align: center;
 }
 
-
-
 .quiz-selector {
-    margin-bottom: 24px;
+    margin-bottom: 0;
     display: flex;
     gap: 12px;
     justify-content: center;
 }
+
 
 .quiz-type-button {
     padding: 8px 16px;
@@ -279,68 +478,6 @@ h3 {
     text-align: center;
 }
 
-/* Add to your existing styles.css */
-
-.quiz-selector {
-    margin-bottom: 24px;
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-}
-
-.quiz-type-button {
-    padding: 8px 16px;
-    background-color: #e5e7eb;
-    color: #374151;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.quiz-type-button.active {
-    background-color: #3b82f6;
-    color: white;
-}
-
-.quiz-type-button:hover {
-    background-color: #2563eb;
-    color: white;
-}
-
-/* Code quiz specific styles */
-.code-container {
-    background-color: #f5f5f5;
-    padding: 1rem;
-    border-radius: 4px;
-    margin: 1rem 0;
-    font-family: monospace;
-}
-
-.code-context, .code-prompt {
-    margin: 0;
-    padding: 0.5rem;
-    white-space: pre-wrap;
-}
-
-.code-input {
-    width: 100%;
-    font-family: monospace;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.hint-container {
-    margin: 1rem 0;
-}
-
-.similarity-score {
-    margin-top: 1rem;
-    font-weight: bold;
-    text-align: center;
-}
 .back-button {
     margin-bottom: 16px;
     background-color: #6b7280;
@@ -358,8 +495,8 @@ h3 {
 
 /* Ensure back button is always visible */
 #back-button {
-    display: block;
-    margin-bottom: 16px;
+    margin: 0;
+    background-color: #6b7280;
 }
 
 .button-group {
@@ -396,7 +533,6 @@ h3 {
     background-color: #16a34a;
 }
 
-
 .button-container {
     display: flex;
     gap: 8px;
@@ -427,4 +563,285 @@ h3 {
 
 .preset-quiz-button:hover {
     background-color: #4338ca;
+}
+
+
+/* Add these styles for the recent quizzes section */
+.recent-quizzes-section {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.recent-quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.recent-quiz-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+}
+
+.quiz-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.quiz-title {
+    font-weight: 600;
+    color: #111827;
+}
+
+.quiz-type, .quiz-date {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.load-quiz-btn {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+    background-color: #3b82f6;
+}
+
+.load-quiz-btn:hover {
+    background-color: #2563eb;
+}
+
+@media (max-width: 640px) {
+    .recent-quiz-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .load-quiz-btn {
+        width: 100%;
+    }
+}
+
+
+/* Enhanced Recent Quizzes Section Styles */
+.recent-quizzes-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.recent-quizzes-section h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.recent-quizzes-section h3::before {
+    content: "📋";
+    margin-right: 8px;
+}
+
+.recent-quiz-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+.recent-quiz-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.recent-quiz-item:hover {
+    border-color: #d1d5db;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.quiz-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.quiz-title {
+    font-weight: 600;
+    color: #111827;
+    font-size: 1rem;
+}
+
+.quiz-type {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background-color: #e0e7ff;
+    color: #4f46e5;
+}
+
+.quiz-type:empty::before {
+    content: "Regular Quiz";
+}
+
+.quiz-type:contains("Code Quiz") {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.quiz-date {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+.load-quiz-btn {
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    background-color: #3b82f6;
+    white-space: nowrap;
+    margin-left: 16px;
+}
+
+.load-quiz-btn:hover {
+    background-color: #2563eb;
+}
+
+/* New indicator for quiz item timestamps */
+.quiz-date {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.quiz-date::before {
+    content: "🕒";
+    font-size: 12px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .recent-quiz-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .load-quiz-btn {
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
+/* Empty state for no quizzes */
+#recent-quizzes p {
+    padding: 16px;
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    background-color: #f9fafb;
+    border: 1px dashed #e5e7eb;
+    border-radius: 8px;
+}
+
+
+/* Ensure the quiz-controls are positioned correctly */
+.quiz-controls {
+    margin-bottom: 0;
+}
+
+/* Fix for any existing styles that might affect layout */
+#quiz-screen {
+    position: relative;
+}
+
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+    .quiz-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .question-nav-dropdown {
+        width: 100%;
+        margin-top: 8px;
+    }
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+
+/* Position quiz controls on the right */
+.quiz-controls {
+    margin-bottom: 0;
+}
+
+/* Making the dropdown look nice */
+.question-nav-dropdown {
+    min-width: 200px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    font-size: 0.875rem;
+    color: #374151;
+    cursor: pointer;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .nav-left, .nav-center, .nav-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .nav-right {
+        justify-content: center;
+    }
+    
+    .quiz-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 16px;
+    }
+    .quiz-controls {
+        width: 100%;
+    }
+    
+    .question-nav-dropdown {
+        width: 100%;
+    }
 }

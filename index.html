@@ -5,33 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz App</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <div id="quiz-type-selector" class="quiz-selector">
-            <button onclick="setQuizType('regular', this)" class="quiz-type-button active">Regular Quiz</button>
-            <button onclick="setQuizType('code', this)" class="quiz-type-button">Code Pattern Quiz</button>
+        <!-- Navigation bar -->
+        <nav class="navbar">
+            <div class="nav-left">
+                <a href="https://konnorkooi.com" class="logo-link">
+                    <img src="logo.png" alt="Logo" class="nav-logo">
+                </a>
+            </div>
+            <div class="nav-center">
+                <div class="nav-center">
+                    <div id="quiz-type-selector" class="quiz-selector" style="display: none;">
+                        <button onclick="setQuizType('regular', this)" class="quiz-type-button active">Regular Quiz</button>
+                        <button onclick="setQuizType('code', this)" class="quiz-type-button">Code Pattern Quiz</button>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-right">
+                <button id="help-button" class="nav-button">Help</button>
+                <div class="dropdown">
+                    <button class="nav-button">AI Tools</button>
+                    <div class="dropdown-content">
+                        <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
+                        <a href="https://claude.ai" target="_blank">Claude</a>
+                        <a href="https://bard.google.com" target="_blank">Gemini</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Help modal -->
+        <div id="help-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Quiz App Help</h2>
+                <p>This app allows you to create and take quizzes using JSON format.</p>
+                <h3>How to use:</h3>
+                <ol>
+                    <li>Paste your JSON or use one of the preset quizzes</li>
+                    <li>Click "Start Quiz" to begin</li>
+                    <li>Answer each question and click "Next Question" to proceed</li>
+                    <li>View your results at the end</li>
+                </ol>
+                <p>You can also format questions to randomize their order.</p>
+                
+                <!-- Add confetti section to the help modal -->
+                <div class="confetti-section">
+                    <h3>Have fun with confetti!</h3>
+                    <div class="confetti-controls">
+                        <button id="confetti-button" class="confetti-btn blue">Celebrate!</button>
+                        <select id="confetti-intensity" class="confetti-dropdown">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="extreme">Extreme</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-        
 
         <div id="start-screen" class="screen">
             <h2 id="format-title">Quiz JSON Format</h2>
-            <pre id="json-format"></pre>
+            <div class="format-options">
+                <label for="randomize-questions">
+                    <input type="checkbox" id="randomize-questions"> Randomize question order
+                </label>
+                <label for="randomize-answers">
+                    <input type="checkbox" id="randomize-answers"> Randomize answer options
+                </label>
+            </div>
+            <div class="json-container">
+                <pre id="json-format"></pre>
+                <button id="copy-json-btn" class="copy-btn"><span class="tooltip">Copy</span></button>
+            </div>
             <textarea 
                 id="json-input" 
                 placeholder="Paste your JSON here..."
             ></textarea>
             <button onclick="handleJsonSubmit()">Start Quiz</button>
-            <button onclick="loadDesignPatternQuiz()" class="preset-quiz-button">Design Patterns Quiz (15 Questions)</button>
-            <button onclick="loadAWSquiz1()" class="preset-quiz-button">AWS Quiz 1 (20 Questions)</button>
+            <!-- Recent Quizzes Section -->
+            <div class="recent-quizzes-section">
+                <h3>Recent Quizzes</h3>
+                <div id="recent-quizzes"></div>
+            </div>
         </div>
 
         <div id="quiz-screen" class="screen hidden">
-            <button id="back-button" onclick="handleBack()" class="back-button">Back</button>
+            <div class="quiz-header">
+                <button id="back-button" onclick="handleBack()" class="back-button">Back</button>
+                <select id="question-nav" class="question-nav-dropdown">
+                    <option value="-1">Jump to question...</option>
+                </select>
+            </div>
             <h2 id="question-text"></h2>
             <div id="options-container"></div>
-            <div id="code-container" class="hidden"></div>
             <div class="bottom-bar">
                 <div id="question-counter"></div>
                 <button id="next-button" class="hidden" onclick="handleNextQuestion()">
