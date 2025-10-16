@@ -40,9 +40,9 @@ ssh konnor@76.135.164.17 "chmod -R 755 /var/www/konnorkooi.com/quiz-app"
 ssh konnor@76.135.164.17 "chmod -R 777 /var/www/konnorkooi.com/quiz-app/quiz_files"
 ```
 
-### Restart Apache (if needed)
+### Restart Nginx (if needed)
 ```bash
-ssh konnor@76.135.164.17 "sudo systemctl restart apache2"
+ssh konnor@76.135.164.17 "sudo systemctl restart nginx"
 ```
 
 ## File Storage Notes

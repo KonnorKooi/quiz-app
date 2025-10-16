@@ -15,7 +15,7 @@ const API_ENDPOINT = './api/quizzes.php';
 // Update the sample JSON formats to include a title
 const sampleRegularJson = {
     title: "Sample Quiz",
-    instructions: "Create a quiz following this format. IMPORTANT: Place the correct answer FIRST (index 0) in the options array - the app will randomize the order automatically. Make all answer options similar in length to avoid bias. Use KaTeX for math ($expression$ for inline, $$expression$$ for display) and markdown for formatting (code blocks, **bold**, *italic*, etc.). Ask complex questions that test deep understanding.",
+    instructions: "Create a quiz following this format. IMPORTANT: Place the correct answer FIRST (index 0) in the options array - the app will randomize the order automatically. MAKE ALL THE OTHER ANSWER OPTIONS SIMILAR IN LENGTH SO THE RIGHT ANSWER IS NOT ALWAYS THE LONGEST and to avoid bias. Use KaTeX for math ($expression$ for inline, $$expression$$ for display) and markdown for formatting (code blocks, **bold**, *italic*, etc.). Ask complex questions that test deep understanding.",
     questions: [
         {
             question: "What is the derivative of $f(x) = x^2 + 3x$?",
