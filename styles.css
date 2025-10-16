@@ -7,6 +7,105 @@ body {
     box-sizing: border-box;
 }
 
+/* Markdown and KaTeX Styling */
+/* Code blocks from markdown */
+.option-button code,
+#question-text code,
+.review-option code,
+.review-question-text code {
+    background-color: #f3f4f6;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    color: #d63384;
+}
+
+.option-button pre,
+#question-text pre,
+.review-option pre,
+.review-question-text pre {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+    padding: 12px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 8px 0;
+}
+
+.option-button pre code,
+#question-text pre code,
+.review-option pre code,
+.review-question-text pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
+}
+
+/* KaTeX math styling */
+.katex {
+    font-size: 1.1em;
+}
+
+.katex-display {
+    margin: 1em 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* Markdown paragraph spacing in questions/options */
+.option-button p,
+#question-text p,
+.review-option p,
+.review-question-text p {
+    margin: 0.5em 0;
+}
+
+.option-button p:first-child,
+#question-text p:first-child,
+.review-option p:first-child {
+    margin-top: 0;
+}
+
+.option-button p:last-child,
+#question-text p:last-child,
+.review-option p:last-child {
+    margin-bottom: 0;
+}
+
+/* Ensure proper text alignment in options with markdown */
+.option-button {
+    text-align: left;
+    display: block;
+}
+
+/* Lists in markdown */
+.option-button ul,
+.option-button ol,
+#question-text ul,
+#question-text ol,
+.review-option ul,
+.review-option ol {
+    margin: 0.5em 0;
+    padding-left: 2em;
+}
+
+/* Bold and italic in markdown */
+.option-button strong,
+#question-text strong,
+.review-option strong {
+    font-weight: 600;
+}
+
+.option-button em,
+#question-text em,
+.review-option em {
+    font-style: italic;
+}
+
 *, *:before, *:after {
     box-sizing: inherit;
 }
@@ -844,4 +943,598 @@ h3 {
     .question-nav-dropdown {
         width: 100%;
     }
+}
+
+
+/* Enhanced Geological Quiz Styling */
+
+/* Main quiz container */
+#geological-quiz-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 1200px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
+  /* Timeline container styling */
+  .timeline-container {
+    position: relative;
+    overflow-x: auto; /* Allow horizontal scroll on small screens */
+    min-height: 280px;
+    padding: 10px 5px;
+  }
+  
+  /* Input field styling */
+  #geological-quiz-container input {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 4px 6px;
+    transition: all 0.2s;
+    background-color: white;
+  }
+  
+  #geological-quiz-container input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  }
+  
+  /* Timeline section colors */
+  #geological-quiz-container .bg-yellow-50 {
+    background-color: #fffbeb;
+  }
+  
+  #geological-quiz-container .bg-green-50 {
+    background-color: #ecfdf5;
+  }
+  
+  #geological-quiz-container .bg-blue-50 {
+    background-color: #eff6ff;
+  }
+  
+  #geological-quiz-container .bg-purple-50 {
+    background-color: #f5f3ff;
+  }
+  
+  #geological-quiz-container .bg-red-50 {
+    background-color: #fef2f2;
+  }
+  
+  /* Button styling */
+  #geological-quiz-container button {
+    transition: all 0.2s;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+  }
+  
+  #geological-quiz-container button:hover {
+    transform: translateY(-1px);
+  }
+  
+  #geological-quiz-container .bg-blue-600 {
+    background-color: #2563eb;
+  }
+  
+  #geological-quiz-container .bg-blue-600:hover {
+    background-color: #1d4ed8;
+  }
+  
+  #geological-quiz-container .bg-gray-500 {
+    background-color: #6b7280;
+  }
+  
+  #geological-quiz-container .bg-gray-500:hover {
+    background-color: #4b5563;
+  }
+  
+  /* Results styling */
+  #geological-quiz-container .text-green-600 {
+    color: #059669;
+  }
+  
+  #geological-quiz-container .text-blue-600 {
+    color: #2563eb;
+  }
+  
+  #geological-quiz-container .text-red-600 {
+    color: #dc2626;
+  }
+  
+  /* Memory tips section */
+  #geological-quiz-container .memory-tips {
+    background-color: #f9fafb;
+    border-radius: 6px;
+    padding: 16px;
+  }
+  
+  /* Responsive adaptations */
+  @media (max-width: 768px) {
+    .timeline-container {
+      overflow-x: scroll;
+      padding-bottom: 20px;
+    }
+    
+    #geological-quiz-container input {
+      font-size: 13px;
+      padding: 3px;
+    }
+    
+    #geological-quiz-container .text-xs {
+      font-size: 11px;
+    }
+    
+    #geological-quiz-container button {
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+  }
+  
+  /* Additional utility classes */
+  .max-w-6xl {
+    max-width: 72rem;
+  }
+  
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .p-6 {
+    padding: 1.5rem;
+  }
+  
+  .p-4 {
+    padding: 1rem;
+  }
+  
+  .p-2 {
+    padding: 0.5rem;
+  }
+  
+  .p-1 {
+    padding: 0.25rem;
+  }
+  
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+  
+  .mt-2 {
+    margin-top: 0.5rem;
+  }
+  
+  .mt-1 {
+    margin-top: 0.25rem;
+  }
+  
+  .mb-6 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .mb-2 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .mb-1 {
+    margin-bottom: 0.25rem;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .w-2\/5 {
+    width: 40%;
+  }
+  
+  .w-3\/5 {
+    width: 60%;
+  }
+  
+  .w-1\/5 {
+    width: 20%;
+  }
+  
+  .w-1\/3 {
+    width: 33.333333%;
+  }
+  
+  .w-1\/2 {
+    width: 50%;
+  }
+  
+  .font-bold {
+    font-weight: 700;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-2xl {
+    font-size: 1.5rem;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+  }
+  
+  .text-lg {
+    font-size: 1.125rem;
+  }
+  
+  .text-sm {
+    font-size: 0.875rem;
+  }
+  
+  .text-xs {
+    font-size: 0.75rem;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  .justify-between {
+    justify-content: space-between;
+  }
+  
+  .relative {
+    position: relative;
+  }
+  
+  .absolute {
+    position: absolute;
+  }
+  
+  .border {
+    border-width: 1px;
+    border-style: solid;
+    border-color: #e5e7eb;
+  }
+  
+  .border-2 {
+    border-width: 2px;
+  }
+  
+  .border-gray-800 {
+    border-color: #1f2937;
+  }
+  
+  .border-l-2 {
+    border-left-width: 2px;
+  }
+  
+  .rounded {
+    border-radius: 0.25rem;
+  }
+  
+  .text-gray-600 {
+    color: #4b5563;
+  }
+  
+  .text-white {
+    color: white;
+  }
+  
+  .h-4 {
+    height: 1rem;
+  }
+  
+  .h-6 {
+    height: 1.5rem;
+  }
+  
+  .h-16 {
+    height: 4rem;
+  }
+  
+  .bg-gray-50 {
+    background-color: #f9fafb;
+  }
+  
+  .opacity-80 {
+    opacity: 0.8;
+  }
+  
+  .pl-6 {
+    padding-left: 1.5rem;
+  }
+  
+  .hidden {
+    display: none;
+  }/* Cenozoic Quiz Specific Styles */
+
+/* Main cenozoic quiz container */
+#cenozoic-quiz-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Cenozoic timeline container */
+.cenozoic-timeline {
+    position: relative;
+    padding: 20px;
+}
+
+/* Timeline sections */
+.timeline-section {
+    margin-bottom: 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.timeline-section:hover {
+    transform: translateX(2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Epoch sections (nested within periods) */
+.epoch-section {
+    margin-bottom: 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.epoch-section:hover {
+    transform: translateX(1px);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Input field styling for cenozoic quiz */
+#cenozoic-quiz-container input {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 6px 8px;
+    transition: all 0.2s;
+    background-color: white;
+}
+
+#cenozoic-quiz-container input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+#cenozoic-quiz-container input.font-bold {
+    font-weight: 600;
+}
+
+#cenozoic-quiz-container input.text-sm {
+    font-size: 12px;
+    padding: 4px 6px;
+}
+
+#cenozoic-quiz-container input.text-xs {
+    font-size: 10px;
+    padding: 3px 4px;
+}
+
+/* Color scheme for different periods */
+.bg-blue-100 {
+    background-color: #dbeafe;
+}
+
+.bg-blue-50 {
+    background-color: #eff6ff;
+}
+
+.bg-green-100 {
+    background-color: #dcfce7;
+}
+
+.bg-yellow-100 {
+    background-color: #fef3c7;
+}
+
+.bg-orange-100 {
+    background-color: #fed7aa;
+}
+
+.bg-red-100 {
+    background-color: #fecaca;
+}
+
+/* Button styling for cenozoic quiz */
+#cenozoic-quiz-container button {
+    transition: all 0.2s;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+#cenozoic-quiz-container button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#cenozoic-quiz-container .bg-blue-600 {
+    background-color: #2563eb;
+    color: white;
+}
+
+#cenozoic-quiz-container .bg-blue-600:hover {
+    background-color: #1d4ed8;
+}
+
+#cenozoic-quiz-container .bg-gray-500 {
+    background-color: #6b7280;
+    color: white;
+}
+
+#cenozoic-quiz-container .bg-gray-500:hover {
+    background-color: #4b5563;
+}
+
+/* Results styling */
+#cenozoic-quiz-container .text-green-600 {
+    color: #059669;
+}
+
+#cenozoic-quiz-container .text-blue-600 {
+    color: #2563eb;
+}
+
+#cenozoic-quiz-container .text-red-600 {
+    color: #dc2626;
+}
+
+#cenozoic-quiz-container .text-blue-800 {
+    color: #1e40af;
+}
+
+#cenozoic-quiz-container .text-blue-700 {
+    color: #1d4ed8;
+}
+
+/* Study tips section */
+#cenozoic-quiz-container .bg-blue-50 {
+    background-color: #eff6ff;
+}
+
+/* Era division labels */
+.era-division {
+    background-color: #f3f4f6;
+    border: 2px solid #9ca3af;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin: 0 8px;
+}
+
+/* Responsive design for cenozoic quiz */
+@media (max-width: 768px) {
+    #cenozoic-quiz-container {
+        margin: 10px;
+        padding: 16px;
+    }
+    
+    .cenozoic-timeline {
+        padding: 10px;
+    }
+    
+    .timeline-section {
+        min-height: 50px;
+        padding: 8px;
+    }
+    
+    .epoch-section {
+        min-height: 35px;
+        padding: 6px;
+    }
+    
+    #cenozoic-quiz-container input {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+    
+    #cenozoic-quiz-container input.font-bold {
+        font-size: 13px;
+    }
+    
+    #cenozoic-quiz-container button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .timeline-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .epoch-section {
+        width: 100%;
+        margin-left: 0;
+        padding-left: 16px;
+        border-left: 3px solid #6b7280;
+    }
+    
+    #cenozoic-quiz-container input {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+}
+
+/* Animation for correct/incorrect answers */
+#cenozoic-quiz-container input[style*="background-color: rgb(212, 237, 218)"] {
+    animation: correctPulse 0.6s ease;
+}
+
+#cenozoic-quiz-container input[style*="background-color: rgb(248, 215, 218)"] {
+    animation: incorrectShake 0.6s ease;
+}
+
+@keyframes correctPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes incorrectShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+/* Utility classes for cenozoic quiz */
+.max-w-4xl {
+    max-width: 56rem;
+}
+
+.bg-gray-50 {
+    background-color: #f9fafb;
+}
+
+.border-gray-400 {
+    border-color: #9ca3af;
+}
+
+.border-gray-600 {
+    border-color: #4b5563;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.pl-3 {
+    padding-left: 0.75rem;
+}
+
+.ml-4 {
+    margin-left: 1rem;
+}
+
+.rounded {
+    border-radius: 0.25rem;
 }

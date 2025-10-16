@@ -15,16 +15,22 @@ const API_ENDPOINT = './api/quizzes.php';
 // Update the sample JSON formats to include a title
 const sampleRegularJson = {
     title: "Sample Quiz",
+    instructions: "Create a quiz following this format. IMPORTANT: Place the correct answer FIRST (index 0) in the options array - the app will randomize the order automatically. Make all answer options similar in length to avoid bias. Use KaTeX for math ($expression$ for inline, $$expression$$ for display) and markdown for formatting (code blocks, **bold**, *italic*, etc.). Ask complex questions that test deep understanding.",
     questions: [
         {
-            question: "What is the capital of France?",
-            options: ["London", "Berlin", "Paris", "Madrid"],
-            correctAnswer: 2
+            question: "What is the derivative of $f(x) = x^2 + 3x$?",
+            options: ["$2x + 3$", "$x + 3$", "$2x^2 + 3x$", "$x^2 + 3$"],
+            correctAnswer: 0
         },
         {
-            question: "Which planet is known as the Red Planet?",
-            options: ["Venus", "Mars", "Jupiter", "Saturn"],
-            correctAnswer: 1
+            question: "Which sorting algorithm has this implementation?\n\n```python\ndef sort(arr):\n    for i in range(len(arr)):\n        for j in range(len(arr) - 1 - i):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n```",
+            options: ["Bubble Sort", "Quick Sort", "Merge Sort", "Insertion Sort"],
+            correctAnswer: 0
+        },
+        {
+            question: "In thermodynamics, what does the formula $$\\Delta G = \\Delta H - T\\Delta S$$ represent?",
+            options: ["Gibbs free energy change", "Entropy change", "Enthalpy change", "Heat capacity"],
+            correctAnswer: 0
         }
     ]
 };
@@ -54,6 +60,37 @@ const sampleCodeJson = {
         }
     ]
 };
+
+// Initialize markdown-it with code highlighting
+const md = window.markdownit({
+    html: true,
+    linkify: true,
+    typographer: true,
+    breaks: true
+});
+
+// Function to render text with markdown and KaTeX
+function renderMarkdownAndMath(text) {
+    // First, render markdown
+    let html = md.render(text);
+
+    // Create a temporary div to hold the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+
+    // Render KaTeX in the temp div
+    renderMathInElement(tempDiv, {
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\[', right: '\\]', display: true},
+            {left: '\\(', right: '\\)', display: false}
+        ],
+        throwOnError: false
+    });
+
+    return tempDiv.innerHTML;
+}
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray(array) {
@@ -121,22 +158,19 @@ async function handleJsonSubmit() {
         const parsedJson = JSON.parse(jsonInput);
         if (validateJson(parsedJson)) {
             originalQuestions = [...parsedJson.questions]; // Store original questions
-            
-            // Apply randomization if checkboxes are checked
-            shouldRandomizeQuestions = document.getElementById('randomize-questions').checked;
-            shouldRandomizeAnswers = document.getElementById('randomize-answers').checked;
-            
+
+            // Apply randomization settings
+            shouldRandomizeQuestions = false; // Keep question order as-is
+            shouldRandomizeAnswers = true; // Always randomize answers
+
             // Process questions based on randomization settings
             let processedQuestions = [...parsedJson.questions];
-            
-            if (shouldRandomizeQuestions) {
-                processedQuestions = randomizeQuestions(processedQuestions);
-            }
-            
-            if (shouldRandomizeAnswers && currentQuizType === 'regular') {
+
+            // Always randomize answer options for regular quizzes
+            if (currentQuizType === 'regular') {
                 processedQuestions = processedQuestions.map(q => randomizeAnswerOptions(q));
             }
-            
+
             questions = processedQuestions;
             
             // Cache the quiz for future use
@@ -248,21 +282,27 @@ function renderQuizReview() {
     questions.forEach((question, qIndex) => {
         const questionDiv = document.createElement('div');
         questionDiv.className = 'review-question';
-        
+
         // Question text
         const questionText = document.createElement('p');
         questionText.className = 'review-question-text';
-        questionText.textContent = `Q${qIndex + 1}: ${question.question}`;
+        const questionNumber = document.createElement('strong');
+        questionNumber.textContent = `Q${qIndex + 1}: `;
+        questionText.appendChild(questionNumber);
+
+        const questionContent = document.createElement('span');
+        questionContent.innerHTML = renderMarkdownAndMath(question.question);
+        questionText.appendChild(questionContent);
         questionDiv.appendChild(questionText);
-        
+
         // Options
         const optionsDiv = document.createElement('div');
         optionsDiv.className = 'review-options';
-        
+
         question.options.forEach((option, oIndex) => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'review-option';
-            
+
             // Add appropriate classes based on correct/user answers
             if (oIndex === question.correctAnswer) {
                 optionDiv.classList.add('correct');
@@ -270,11 +310,11 @@ function renderQuizReview() {
             if (userAnswers[qIndex] === oIndex) {
                 optionDiv.classList.add(oIndex === question.correctAnswer ? 'user-correct' : 'user-incorrect');
             }
-            
-            optionDiv.textContent = option;
+
+            optionDiv.innerHTML = renderMarkdownAndMath(option);
             optionsDiv.appendChild(optionDiv);
         });
-        
+
         questionDiv.appendChild(optionsDiv);
         reviewContainer.appendChild(questionDiv);
     });
@@ -289,8 +329,6 @@ function resetQuiz() {
     userAnswers = [];
     visitedQuestions = new Set();
     document.getElementById('json-input').value = '';
-    document.getElementById('randomize-questions').checked = false;
-    document.getElementById('randomize-answers').checked = false;
     showStartScreen();
 }
 
@@ -388,42 +426,52 @@ function calculateStringSimilarity(str1, str2) {
 function renderRegularQuestion() {
     const question = questions[currentQuestion];
     const quizScreen = document.getElementById('quiz-screen');
-    
-    // Create a template div to store the new content
-    const contentDiv = document.createElement('div');
-    contentDiv.innerHTML = `
-        <h2 id="question-text">${question.question}</h2>
-        <div id="options-container">
-            ${question.options.map((option, index) => `
-                <button class="option-button" onclick="handleAnswer(${index})">${option}</button>
-            `).join('')}
-        </div>
-        <div class="bottom-bar">
-            <div id="question-counter">Question ${currentQuestion + 1} of ${questions.length}</div>
-            <button id="next-button" class="hidden" onclick="handleNextQuestion()">Next Question</button>
-        </div>
-    `;
-    
+
     // Clear existing content except the quiz header
     const quizHeader = quizScreen.querySelector('.quiz-header');
     quizScreen.innerHTML = '';
     quizScreen.appendChild(quizHeader);
-    
-    // Add all the new elements
-    while (contentDiv.firstChild) {
-        quizScreen.appendChild(contentDiv.firstChild);
-    }
-    
+
+    // Create and render the question text with markdown and math
+    const questionHeading = document.createElement('h2');
+    questionHeading.id = 'question-text';
+    questionHeading.innerHTML = renderMarkdownAndMath(question.question);
+    quizScreen.appendChild(questionHeading);
+
+    // Create options container
+    const optionsContainer = document.createElement('div');
+    optionsContainer.id = 'options-container';
+
+    // Create option buttons with rendered content
+    question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'option-button';
+        button.innerHTML = renderMarkdownAndMath(option);
+        button.onclick = () => handleAnswer(index);
+        optionsContainer.appendChild(button);
+    });
+
+    quizScreen.appendChild(optionsContainer);
+
+    // Create bottom bar
+    const bottomBar = document.createElement('div');
+    bottomBar.className = 'bottom-bar';
+    bottomBar.innerHTML = `
+        <div id="question-counter">Question ${currentQuestion + 1} of ${questions.length}</div>
+        <button id="next-button" class="hidden" onclick="handleNextQuestion()">Next Question</button>
+    `;
+    quizScreen.appendChild(bottomBar);
+
     // Update navigation dropdown
     updateQuestionNavigation();
-    
+
     // If user has already answered this question, show the answer
     if (userAnswers[currentQuestion] !== null) {
         // Show the user's answer and correct/incorrect status
         selectedAnswer = userAnswers[currentQuestion];
         const buttons = document.querySelectorAll('.option-button');
         buttons.forEach(button => button.classList.add('disabled'));
-        
+
         const correct = question.correctAnswer === selectedAnswer;
         if (correct) {
             buttons[selectedAnswer].classList.add('correct');
@@ -431,7 +479,7 @@ function renderRegularQuestion() {
             buttons[selectedAnswer].classList.add('incorrect');
             buttons[question.correctAnswer].classList.add('correct');
         }
-        
+
         document.getElementById('next-button').classList.remove('hidden');
     }
 }
@@ -476,7 +524,7 @@ function setQuizType(type) {
     const jsonFormat = document.getElementById('json-format');
     
     if (type === 'regular') {
-        formatTitle.textContent = 'Regular Quiz JSON Format';
+        formatTitle.textContent = 'Quiz JSON Format';
         jsonFormat.textContent = JSON.stringify(sampleRegularJson, null, 2);
     } else {
         formatTitle.textContent = 'Code Pattern Quiz JSON Format';
@@ -495,10 +543,10 @@ function hideModal(modalId) {
 }
 
 // Function to trigger confetti with different intensity levels
-// Update the triggerConfetti function to set a higher z-index
+// Confetti shoots from the sides instead of center
 function triggerConfetti(intensity = 'medium') {
     let particleCount, spread, startVelocity, scalar;
-    
+
     switch (intensity) {
         case 'low':
             particleCount = 50;
@@ -525,14 +573,33 @@ function triggerConfetti(intensity = 'medium') {
             startVelocity = 30;
             scalar = 1.0;
     }
-    
-    confetti({
-        particleCount,
+
+    // Fire confetti from both left and right sides
+    const defaults = {
+        particleCount: Math.floor(particleCount / 2),
         spread,
-        origin: { y: 0.6 },
         startVelocity,
         scalar,
-        zIndex: 2000 // Set z-index higher than the modal's z-index (1000)
+        zIndex: 2000,
+        gravity: 1,
+        drift: 0,
+        ticks: 200
+    };
+
+    // Left side confetti (shooting right and slightly down)
+    confetti({
+        ...defaults,
+        origin: { x: 0, y: 0.5 },
+        angle: 60,
+        spread: spread
+    });
+
+    // Right side confetti (shooting left and slightly down)
+    confetti({
+        ...defaults,
+        origin: { x: 1, y: 0.5 },
+        angle: 120,
+        spread: spread
     });
 }
 // Function to copy text to clipboard

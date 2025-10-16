@@ -6,7 +6,20 @@
     <title>Quiz App</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Markdown-it for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
+
+    <!-- Other libraries -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react@17/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -26,6 +39,14 @@
                 </div>
             </div>
             <div class="nav-right">
+                <!-- Extra Quizzes dropdown (updated) -->
+                <div class="dropdown">
+                    <button class="nav-button">Extra</button>
+                    <div class="dropdown-content">
+                        <a href="#" onclick="showGeologicalTimeQuiz(); return false;">Geological Timescale Quiz</a>
+                        <a href="#" onclick="showCenozoicTimeQuiz(); return false;">Cenozoic Era Quiz</a>
+                    </div>
+                </div>
                 <button id="help-button" class="nav-button">Help</button>
                 <div class="dropdown">
                     <button class="nav-button">AI Tools</button>
@@ -71,14 +92,6 @@
 
         <div id="start-screen" class="screen">
             <h2 id="format-title">Quiz JSON Format</h2>
-            <div class="format-options">
-                <label for="randomize-questions">
-                    <input type="checkbox" id="randomize-questions"> Randomize question order
-                </label>
-                <label for="randomize-answers">
-                    <input type="checkbox" id="randomize-answers"> Randomize answer options
-                </label>
-            </div>
             <div class="json-container">
                 <pre id="json-format"></pre>
                 <button id="copy-json-btn" class="copy-btn"><span class="tooltip">Copy</span></button>
@@ -118,7 +131,31 @@
             <div id="quiz-review" class="quiz-review"></div>
             <button onclick="resetQuiz()">Start New Quiz</button>
         </div>
+
+        <!-- Geological Time Quiz Screen (original) -->
+        <div id="geological-quiz-screen" class="screen hidden">
+            <div class="quiz-header">
+                <button onclick="hideGeologicalTimeQuiz()" class="back-button">Back to Main App</button>
+            </div>
+            <div id="geological-quiz-container"></div>
+        </div>
+
+        <!-- Cenozoic Time Quiz Screen (new) -->
+        <div id="cenozoic-quiz-screen" class="screen hidden">
+            <div class="quiz-header">
+                <button onclick="hideCenozoicTimeQuiz()" class="back-button">Back to Main App</button>
+            </div>
+            <div id="cenozoic-quiz-container"></div>
+        </div>
     </div>
+
+    <!-- Main app script -->
     <script src="script.js"></script>
+    
+    <!-- Geological Time Quiz script (original) -->
+    <script type="text/babel" src="geological-quiz.js"></script>
+
+    <!-- Cenozoic Time Quiz script (new) -->
+    <script type="text/babel" src="geological-quiz-v2.js"></script>
 </body>
 </html>
