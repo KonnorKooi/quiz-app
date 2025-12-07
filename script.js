@@ -15,20 +15,23 @@ const API_ENDPOINT = './api/quizzes.php';
 // Update the sample JSON formats to include a title
 const sampleRegularJson = {
     title: "Sample Quiz",
-    instructions: "Create a quiz following this format. IMPORTANT: Place the correct answer FIRST (index 0) in the options array - the app will randomize the order automatically. MAKE ALL THE OTHER ANSWER OPTIONS SIMILAR IN LENGTH SO THE RIGHT ANSWER IS NOT ALWAYS THE LONGEST and to avoid bias. Use KaTeX for math ($expression$ for inline, $$expression$$ for display) and markdown for formatting (code blocks, **bold**, *italic*, etc.). Ask complex questions that test deep understanding.",
+    instructions: "INSTRUCTIONS FOR AI: Place the correct answer FIRST (index 0) in the options array - the app will randomize order. Make all answer options similar in length to avoid bias. Include a 'reasoning' field explaining why the correct answer is correct. Use KaTeX for math ($expression$ for inline, $$expression$$ for display). Use markdown for formatting (**bold**, *italic*, code blocks, etc.). Ask complex questions that test deep understanding.",
     questions: [
         {
             question: "What is the derivative of $f(x) = x^2 + 3x$?",
+            reasoning: "Using the power rule, the derivative of $x^2$ is $2x$, and the derivative of $3x$ is $3$. Therefore, $f'(x) = 2x + 3$.",
             options: ["$2x + 3$", "$x + 3$", "$2x^2 + 3x$", "$x^2 + 3$"],
             correctAnswer: 0
         },
         {
             question: "Which sorting algorithm has this implementation?\n\n```python\ndef sort(arr):\n    for i in range(len(arr)):\n        for j in range(len(arr) - 1 - i):\n            if arr[j] > arr[j + 1]:\n                arr[j], arr[j + 1] = arr[j + 1], arr[j]\n```",
+            reasoning: "This is Bubble Sort because it uses nested loops to repeatedly compare adjacent elements and swap them if they're in the wrong order. The algorithm 'bubbles' the largest element to the end in each pass.",
             options: ["Bubble Sort", "Quick Sort", "Merge Sort", "Insertion Sort"],
             correctAnswer: 0
         },
         {
             question: "In thermodynamics, what does the formula $$\\Delta G = \\Delta H - T\\Delta S$$ represent?",
+            reasoning: "This is the Gibbs free energy equation, which determines the spontaneity of a process. It relates the change in Gibbs free energy ($\\Delta G$) to enthalpy change ($\\Delta H$), temperature ($T$), and entropy change ($\\Delta S$).",
             options: ["Gibbs free energy change", "Entropy change", "Enthalpy change", "Heat capacity"],
             correctAnswer: 0
         }
@@ -71,25 +74,56 @@ const md = window.markdownit({
 
 // Function to render text with markdown and KaTeX
 function renderMarkdownAndMath(text) {
-    // First, render markdown
-    let html = md.render(text);
+    // Step 1: Extract and protect KaTeX expressions from markdown processing
+    const mathExpressions = [];
+    let processedText = text;
 
-    // Create a temporary div to hold the HTML
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = html;
-
-    // Render KaTeX in the temp div
-    renderMathInElement(tempDiv, {
-        delimiters: [
-            {left: '$$', right: '$$', display: true},
-            {left: '$', right: '$', display: false},
-            {left: '\\[', right: '\\]', display: true},
-            {left: '\\(', right: '\\)', display: false}
-        ],
-        throwOnError: false
+    // Extract display math ($$...$$) first (must be before inline $...$)
+    processedText = processedText.replace(/\$\$([\s\S]*?)\$\$/g, (match, expr) => {
+        const placeholder = `KATEX_DISPLAY_${mathExpressions.length}`;
+        mathExpressions.push({ type: 'display', expr: expr, placeholder });
+        return placeholder;
     });
 
-    return tempDiv.innerHTML;
+    // Extract inline math ($...$)
+    processedText = processedText.replace(/\$([^\$\n]+?)\$/g, (match, expr) => {
+        const placeholder = `KATEX_INLINE_${mathExpressions.length}`;
+        mathExpressions.push({ type: 'inline', expr: expr, placeholder });
+        return placeholder;
+    });
+
+    // Extract LaTeX bracket notation \[...\] and \(...\)
+    processedText = processedText.replace(/\\\[([\s\S]*?)\\\]/g, (match, expr) => {
+        const placeholder = `KATEX_BRACKET_DISPLAY_${mathExpressions.length}`;
+        mathExpressions.push({ type: 'display', expr: expr, placeholder });
+        return placeholder;
+    });
+
+    processedText = processedText.replace(/\\\(([\s\S]*?)\\\)/g, (match, expr) => {
+        const placeholder = `KATEX_PAREN_INLINE_${mathExpressions.length}`;
+        mathExpressions.push({ type: 'inline', expr: expr, placeholder });
+        return placeholder;
+    });
+
+    // Step 2: Process markdown on the text (without KaTeX expressions)
+    let html = md.render(processedText);
+
+    // Step 3: Restore KaTeX expressions
+    mathExpressions.forEach(math => {
+        try {
+            const rendered = katex.renderToString(math.expr, {
+                displayMode: math.type === 'display',
+                throwOnError: false
+            });
+            html = html.replace(math.placeholder, rendered);
+        } catch (e) {
+            // If KaTeX fails, restore the original expression
+            const wrapper = math.type === 'display' ? '$$' : '$';
+            html = html.replace(math.placeholder, `${wrapper}${math.expr}${wrapper}`);
+        }
+    });
+
+    return html;
 }
 
 // Fisher-Yates shuffle algorithm
@@ -198,13 +232,13 @@ function handleAnswer(selectedIndex) {
     if (selectedAnswer !== null) return;
     selectedAnswer = selectedIndex;
     userAnswers[currentQuestion] = selectedIndex; // Store user's answer
-    
+
     const question = questions[currentQuestion];
     const correct = question.correctAnswer === selectedIndex;
-    
+
     const buttons = document.querySelectorAll('.option-button');
     buttons.forEach(button => button.classList.add('disabled'));
-    
+
     if (correct) {
         triggerConfetti('medium'); // Default confetti for correct answers
         score++;
@@ -213,8 +247,43 @@ function handleAnswer(selectedIndex) {
         buttons[selectedIndex].classList.add('incorrect');
         buttons[question.correctAnswer].classList.add('correct');
     }
-    
+
+    // Display reasoning if available
+    if (question.reasoning) {
+        displayReasoning(question.reasoning, correct);
+    }
+
     document.getElementById('next-button').classList.remove('hidden');
+}
+
+// Function to display reasoning after answering
+function displayReasoning(reasoning, isCorrect) {
+    // Check if reasoning box already exists
+    let reasoningBox = document.getElementById('reasoning-box');
+    if (reasoningBox) {
+        reasoningBox.remove();
+    }
+
+    // Create reasoning box
+    reasoningBox = document.createElement('div');
+    reasoningBox.id = 'reasoning-box';
+    reasoningBox.className = isCorrect ? 'reasoning-box correct-reasoning' : 'reasoning-box incorrect-reasoning';
+
+    const reasoningTitle = document.createElement('div');
+    reasoningTitle.className = 'reasoning-title';
+    reasoningTitle.textContent = isCorrect ? '✓ Correct!' : '✗ Incorrect';
+
+    const reasoningContent = document.createElement('div');
+    reasoningContent.className = 'reasoning-content';
+    reasoningContent.innerHTML = renderMarkdownAndMath(reasoning);
+
+    reasoningBox.appendChild(reasoningTitle);
+    reasoningBox.appendChild(reasoningContent);
+
+    // Insert reasoning box after options container
+    const optionsContainer = document.getElementById('options-container');
+    const bottomBar = document.querySelector('.bottom-bar');
+    optionsContainer.parentNode.insertBefore(reasoningBox, bottomBar);
 }
 
 function handleNextQuestion() {
@@ -345,14 +414,34 @@ function showQuizScreen() {
     document.getElementById('quiz-screen').classList.remove('hidden');
     document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('quiz-type-selector').classList.add('hidden');
+
+    // Push quiz state to browser history
+    history.pushState({ screen: 'quiz' }, '', '');
 }
 
-// Show start screen
+// Show start screen (with history)
 function showStartScreen() {
     document.getElementById('start-screen').classList.remove('hidden');
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.add('hidden');
     document.getElementById('quiz-type-selector').classList.remove('hidden');
+
+    // Push start state to browser history
+    history.pushState({ screen: 'start' }, '', '');
+}
+
+// Show start screen without pushing history (for popstate handler)
+function showStartScreenWithoutHistory() {
+    document.getElementById('start-screen').classList.remove('hidden');
+    document.getElementById('quiz-screen').classList.add('hidden');
+    document.getElementById('results-screen').classList.add('hidden');
+    document.getElementById('quiz-type-selector').classList.remove('hidden');
+
+    // Also hide geological quiz screens
+    const geologicalScreen = document.getElementById('geological-quiz-screen');
+    const cenozoicScreen = document.getElementById('cenozoic-quiz-screen');
+    if (geologicalScreen) geologicalScreen.classList.add('hidden');
+    if (cenozoicScreen) cenozoicScreen.classList.add('hidden');
 }
 
 // Show results screen
@@ -361,7 +450,7 @@ function showResultsScreen() {
     document.getElementById('quiz-screen').classList.add('hidden');
     document.getElementById('results-screen').classList.remove('hidden');
     document.getElementById('quiz-type-selector').classList.add('hidden');
-    
+
     // Display final score
     const scoreText = document.getElementById('score-text');
     if (currentQuizType === 'regular') {
@@ -374,7 +463,7 @@ function showResultsScreen() {
         const similarityScores = document.querySelectorAll('.similarity-score');
         let totalSimilarity = 0;
         let validScores = 0;
-        
+
         similarityScores.forEach(score => {
             if (score.textContent) {
                 const match = score.textContent.match(/\d+/);
@@ -384,10 +473,13 @@ function showResultsScreen() {
                 }
             }
         });
-        
+
         const averageSimilarity = validScores > 0 ? Math.round(totalSimilarity / validScores) : 0;
         scoreText.textContent = `Average similarity score: ${averageSimilarity}%`;
     }
+
+    // Push results state to browser history
+    history.pushState({ screen: 'results' }, '', '');
 }
 
 function calculateStringSimilarity(str1, str2) {
@@ -478,6 +570,11 @@ function renderRegularQuestion() {
         } else {
             buttons[selectedAnswer].classList.add('incorrect');
             buttons[question.correctAnswer].classList.add('correct');
+        }
+
+        // Display reasoning if available
+        if (question.reasoning) {
+            displayReasoning(question.reasoning, correct);
         }
 
         document.getElementById('next-button').classList.remove('hidden');
@@ -698,12 +795,85 @@ function setupEventListeners() {
 }
 
 // Initialize on page load
+// Dark mode functionality
+function toggleDarkMode() {
+    const html = document.documentElement;
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    // Update the icon
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = document.querySelector('.theme-icon');
+    if (icon) {
+        icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+function initializeDarkMode() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+}
+
+// Handle browser back/forward buttons
+window.addEventListener('popstate', function(event) {
+    if (event.state) {
+        // Navigate to the screen stored in history state
+        switch(event.state.screen) {
+            case 'start':
+                showStartScreenWithoutHistory();
+                break;
+            case 'quiz':
+                // Don't allow direct back to quiz - go to start instead
+                showStartScreenWithoutHistory();
+                break;
+            case 'results':
+                // Don't allow direct back to results - go to start instead
+                showStartScreenWithoutHistory();
+                break;
+            case 'geological':
+                // Show geological quiz screen without pushing new history
+                document.getElementById('start-screen')?.classList.add('hidden');
+                document.getElementById('quiz-screen')?.classList.add('hidden');
+                document.getElementById('results-screen')?.classList.add('hidden');
+                document.getElementById('quiz-type-selector')?.classList.add('hidden');
+                document.getElementById('cenozoic-quiz-screen')?.classList.add('hidden');
+                document.getElementById('geological-quiz-screen')?.classList.remove('hidden');
+                break;
+            case 'cenozoic':
+                // Show cenozoic quiz screen without pushing new history
+                document.getElementById('start-screen')?.classList.add('hidden');
+                document.getElementById('quiz-screen')?.classList.add('hidden');
+                document.getElementById('results-screen')?.classList.add('hidden');
+                document.getElementById('quiz-type-selector')?.classList.add('hidden');
+                document.getElementById('geological-quiz-screen')?.classList.add('hidden');
+                document.getElementById('cenozoic-quiz-screen')?.classList.remove('hidden');
+                break;
+            default:
+                showStartScreenWithoutHistory();
+        }
+    } else {
+        // No state means initial page or navigated away - show start
+        showStartScreenWithoutHistory();
+    }
+});
+
 window.onload = function() {
     setQuizType('regular');
     setupEventListeners();
-    
+    initializeDarkMode();
+
     // Set up initial JSON format display
     document.getElementById('json-format').textContent = JSON.stringify(sampleRegularJson, null, 2);
+
+    // Initialize browser history with start screen state
+    history.replaceState({ screen: 'start' }, '', '');
 };
 
 // Update the loadDesignPatternQuiz function to add a title
@@ -833,20 +1003,29 @@ async function updateRecentQuizzes() {
         recentQuizzes.forEach(quiz => {
             const quizItem = document.createElement('div');
             quizItem.className = 'recent-quiz-item';
-            
-            // Format date
-            const date = new Date(quiz.timestamp);
-            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
-            
+
+            // Format last taken date
+            const lastTakenDate = new Date(quiz.timestamp);
+            const formattedLastTaken = lastTakenDate.toLocaleDateString() + ' ' + lastTakenDate.toLocaleTimeString();
+
+            // Format created date (if available)
+            let createdHtml = '';
+            if (quiz.created) {
+                const createdDate = new Date(quiz.created);
+                const formattedCreated = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString();
+                createdHtml = `<span class="quiz-created">Created: ${formattedCreated}</span>`;
+            }
+
             quizItem.innerHTML = `
                 <div class="quiz-info">
                     <span class="quiz-title">${quiz.title}</span>
                     <span class="quiz-type">${quiz.type === 'regular' ? 'Regular Quiz' : 'Code Quiz'}</span>
-                    <span class="quiz-date">${formattedDate}</span>
+                    ${createdHtml}
+                    <span class="quiz-date">Last taken: ${formattedLastTaken}</span>
                 </div>
                 <button class="load-quiz-btn" data-id="${quiz.id}">Load Quiz</button>
             `;
-            
+
             quizList.appendChild(quizItem);
         });
         

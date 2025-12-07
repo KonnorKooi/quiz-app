@@ -56,6 +56,7 @@ quiz-app/
   "questions": [
     {
       "question": "What is the integral of $2x$?",
+      "reasoning": "Using the power rule for integration, $\\int x^n dx = \\frac{x^{n+1}}{n+1} + C$, we get $\\int 2x dx = x^2 + C$.",
       "options": [
         "$x^2 + C$",
         "$2x^2$",
@@ -102,12 +103,14 @@ When generating quizzes for this app, follow these guidelines:
 
 3. **Question Quality**: Ask complex, thoughtful questions that test understanding, not just memorization.
 
-4. **Math Rendering**: Use KaTeX syntax for mathematical expressions:
+4. **Reasoning**: Include a reasoning field that explains why the correct answer is correct. This helps users understand the concept after answering. The reasoning should be clear, educational, and use the same formatting options (KaTeX and markdown) as questions.
+
+5. **Math Rendering**: Use KaTeX syntax for mathematical expressions:
    - Inline math: `$expression$`
    - Block math: `$$expression$$`
    - Example: `$\\frac{d}{dx}(x^2) = 2x$`
 
-5. **Markdown Formatting**: Use markdown for better formatting:
+6. **Markdown Formatting**: Use markdown for better formatting:
    - Code blocks: ` ```language\ncode\n``` `
    - Bold: `**text**`
    - Italic: `*text*`
@@ -120,6 +123,7 @@ Create a quiz following this JSON format. Note that:
 - The app will randomize the order later
 - Make all answer options similar in length (avoid length bias)
 - Ask good, complex questions that test deep understanding
+- Include a reasoning field explaining why the correct answer is right
 - Use KaTeX for math: $expression$ (inline) or $$expression$$ (block)
 - Use markdown for formatting: **bold**, *italic*, code blocks, etc.
 
@@ -143,7 +147,7 @@ Follow this JSON format: [paste the regular quiz JSON example]
 - Quizzes cached server-side via PHP API (script.js:825)
 - Includes duplicate detection based on quiz content
 - Recent quizzes displayed on start screen (up to 10)
-- Cache duration: 60 days
+- Cache duration: 90 days (3 months)
 
 ### Question Navigation
 - Users can only navigate to previously visited questions

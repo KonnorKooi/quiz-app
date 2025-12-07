@@ -593,6 +593,9 @@ function showGeologicalTimeQuiz() {
       console.error('Error rendering geological quiz:', error);
     }
   }
+
+  // Push geological quiz state to browser history
+  history.pushState({ screen: 'geological' }, '', '');
 }
 
 function hideGeologicalTimeQuiz() {

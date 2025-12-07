@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 
 // File storage settings
 $storage_dir = __DIR__ . '/../quiz_files'; 
-$max_age_days = 15; // Auto-delete files older than this
+$max_age_days = 90; // Auto-delete files older than this (3 months)
 
 // Create storage directory if it doesn't exist
 if (!file_exists($storage_dir)) {
@@ -84,22 +84,27 @@ switch ($method) {
         if (file_exists($filepath)) {
             // Update the existing quiz with new timestamp
             $existingQuiz = json_decode(file_get_contents($filepath), true);
-            $existingQuiz['timestamp'] = $timestamp; // Update timestamp
+            $existingQuiz['timestamp'] = $timestamp; // Update last taken timestamp
             $existingQuiz['data'] = $data['data']; // Update data in case it changed
             $existingQuiz['type'] = $data['type']; // Update type in case it changed
-            
+
+            // Keep the original created timestamp if it exists, otherwise set it now
+            if (!isset($existingQuiz['created'])) {
+                $existingQuiz['created'] = $timestamp;
+            }
+
             $saved = file_put_contents($filepath, json_encode($existingQuiz));
-            
+
             if ($saved !== false) {
                 echo json_encode([
-                    'status' => 'success', 
-                    'message' => 'Quiz updated', 
+                    'status' => 'success',
+                    'message' => 'Quiz updated',
                     'id' => $existingQuiz['id']
                 ]);
             } else {
                 http_response_code(500);
                 echo json_encode([
-                    'status' => 'error', 
+                    'status' => 'error',
                     'message' => 'Failed to update quiz file'
                 ]);
             }
@@ -110,6 +115,7 @@ switch ($method) {
                 'title' => $quizData['title'],
                 'type' => $data['type'],
                 'data' => $data['data'],
+                'created' => $timestamp,
                 'timestamp' => $timestamp
             ];
             

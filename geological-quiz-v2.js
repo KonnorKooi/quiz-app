@@ -466,6 +466,9 @@ function showCenozoicTimeQuiz() {
       console.error('Error rendering cenozoic quiz:', error);
     }
   }
+
+  // Push cenozoic quiz state to browser history
+  history.pushState({ screen: 'cenozoic' }, '', '');
 }
 
 function hideCenozoicTimeQuiz() {

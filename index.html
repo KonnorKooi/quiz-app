@@ -48,14 +48,9 @@
                     </div>
                 </div>
                 <button id="help-button" class="nav-button">Help</button>
-                <div class="dropdown">
-                    <button class="nav-button">AI Tools</button>
-                    <div class="dropdown-content">
-                        <a href="https://chat.openai.com" target="_blank">ChatGPT</a>
-                        <a href="https://claude.ai" target="_blank">Claude</a>
-                        <a href="https://bard.google.com" target="_blank">Gemini</a>
-                    </div>
-                </div>
+                <button id="dark-mode-toggle" class="nav-button" onclick="toggleDarkMode()">
+                    <span class="theme-icon">🌙</span>
+                </button>
             </div>
         </nav>
 
@@ -128,8 +123,8 @@
         <div id="results-screen" class="screen hidden">
             <h2>Quiz Complete!</h2>
             <p id="score-text"></p>
-            <div id="quiz-review" class="quiz-review"></div>
             <button onclick="resetQuiz()">Start New Quiz</button>
+            <div id="quiz-review" class="quiz-review"></div>
         </div>
 
         <!-- Geological Time Quiz Screen (original) -->
