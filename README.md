@@ -85,30 +85,6 @@ php -S localhost:3000
 
 4. Visit `http://localhost:3000` in your browser
 
-## Deployment
-
-1. Upload files to your web server:
-```bash
-scp -r ./* username@yourserver.com:/var/www/yoursite.com/quiz-app/
-```
-
-2. Create required directories:
-```bash
-ssh username@yourserver.com "mkdir -p /var/www/yoursite.com/quiz-app/api"
-ssh username@yourserver.com "mkdir -p /var/www/yoursite.com/quiz-app/quiz_files"
-```
-
-3. Upload the PHP API file:
-```bash
-scp api/quizzes.php username@yourserver.com:/var/www/yoursite.com/quiz-app/api/
-```
-
-4. Set proper permissions:
-```bash
-ssh username@yourserver.com "chmod -R 755 /var/www/yoursite.com/quiz-app"
-ssh username@yourserver.com "chmod -R 777 /var/www/yoursite.com/quiz-app/quiz_files"
-```
-
 ## Files
 
 - `index.html` - Main HTML structure

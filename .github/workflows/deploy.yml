@@ -1,0 +1,47 @@
+name: Deploy to konnorkooi.com/quiz-app
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via rsync
+        run: |
+          rsync -az \
+            --delete \
+            --delete-excluded \
+            --filter='protect quiz_files/' \
+            --filter='protect quiz_files_archive/' \
+            --exclude='.git/' \
+            --exclude='.github/' \
+            --exclude='quiz_files/' \
+            --exclude='quiz_files_archive/' \
+            --exclude='deploy.sh' \
+            --exclude='updatesever.md' \
+            --exclude='*.md' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            ./ \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+
+      - name: Set permissions
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "chmod -R 755 ${{ secrets.DEPLOY_PATH }} && \
+             chmod -R 777 ${{ secrets.DEPLOY_PATH }}/quiz_files && \
+             chmod -R 777 ${{ secrets.DEPLOY_PATH }}/quiz_files_archive"

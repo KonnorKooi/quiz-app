@@ -24,6 +24,8 @@ quiz-app/
 ├── api/
 │   ├── quizzes.php        # Quiz storage/retrieval API
 │   └── test_write.php     # API testing
+├── quiz_files/             # Active quiz cache (auto-created)
+├── quiz_files_archive/     # Archived old quizzes (auto-created)
 ├── favicon.ico
 ├── logo.png
 └── deploy.sh              # Deployment script
@@ -148,6 +150,7 @@ Follow this JSON format: [paste the regular quiz JSON example]
 - Includes duplicate detection based on quiz content
 - Recent quizzes displayed on start screen (up to 10)
 - Cache duration: 90 days (3 months)
+- Old quizzes are archived (moved to `quiz_files_archive/`) instead of deleted for recovery
 
 ### Question Navigation
 - Users can only navigate to previously visited questions
