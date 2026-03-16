@@ -16,7 +16,7 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
@@ -42,6 +42,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key \
             ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
-            "chmod -R 755 ${{ secrets.DEPLOY_PATH }} && \
-             chmod -R 777 ${{ secrets.DEPLOY_PATH }}/quiz_files && \
-             chmod -R 777 ${{ secrets.DEPLOY_PATH }}/quiz_files_archive"
+            "find ${{ secrets.DEPLOY_PATH }} \
+               -not -path '${{ secrets.DEPLOY_PATH }}/quiz_files*' \
+               -not -path '${{ secrets.DEPLOY_PATH }}/quiz_files_archive*' \
+               -exec chmod 755 {} \; 2>/dev/null || true"
