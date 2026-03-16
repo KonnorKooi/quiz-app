@@ -1031,9 +1031,7 @@ async function updateRecentQuizzes() {
             quizList.appendChild(quizItem);
         });
 
-        recentQuizzesContainer.appendChild(quizList);
-
-        // Add "Load more" button if there are more quizzes
+        // Add "Load more" button inside the scroll list if there are more quizzes
         if (sortedQuizzes.length > recentQuizzesVisibleCount) {
             const loadMoreBtn = document.createElement('button');
             loadMoreBtn.className = 'load-more-btn';
@@ -1042,8 +1040,10 @@ async function updateRecentQuizzes() {
                 recentQuizzesVisibleCount += RECENT_QUIZ_PAGE_SIZE;
                 updateRecentQuizzes();
             });
-            recentQuizzesContainer.appendChild(loadMoreBtn);
+            quizList.appendChild(loadMoreBtn);
         }
+
+        recentQuizzesContainer.appendChild(quizList);
 
         // Add event listeners to the load buttons
         document.querySelectorAll('.load-quiz-btn').forEach(button => {
