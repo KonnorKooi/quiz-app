@@ -945,9 +945,24 @@ h3 {
     flex-direction: column;
     gap: 12px;
     margin-top: 16px;
-    max-height: 400px;
+    max-height: 600px;
     overflow-y: auto;
     padding-right: 8px;
+}
+
+.load-more-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+.load-more-btn:hover {
+    background-color: var(--border-light);
 }
 
 .recent-quiz-item {

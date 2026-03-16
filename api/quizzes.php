@@ -7,16 +7,22 @@ error_reporting(E_ALL);
 header('Content-Type: application/json');
 
 // File storage settings
-$storage_dir = __DIR__ . '/../quiz_files'; 
-$max_age_days = 90; // Auto-delete files older than this (3 months)
+$storage_dir = __DIR__ . '/../quiz_files';
+$archive_dir = __DIR__ . '/../quiz_files_archive'; // Archive for old quizzes
+$max_age_days = 90; // Auto-archive files older than this (3 months)
 
 // Create storage directory if it doesn't exist
 if (!file_exists($storage_dir)) {
     mkdir($storage_dir, 0755, true);
 }
 
-// Clean up old files (older than max_age_days)
-cleanupOldFiles($storage_dir, $max_age_days);
+// Create archive directory if it doesn't exist
+if (!file_exists($archive_dir)) {
+    mkdir($archive_dir, 0755, true);
+}
+
+// Archive old files (older than max_age_days)
+cleanupOldFiles($storage_dir, $archive_dir, $max_age_days);
 
 // Get the request method
 $method = $_SERVER['REQUEST_METHOD'];
@@ -163,15 +169,26 @@ switch ($method) {
 }
 
 /**
- * Clean up files older than specified days
+ * Archive files older than specified days
+ * Moves old files to archive directory instead of deleting them
  */
-function cleanupOldFiles($dir, $days) {
+function cleanupOldFiles($dir, $archive_dir, $days) {
     $cutoff = time() - ($days * 24 * 60 * 60);
     $files = glob($dir . "/*.json");
-    
+
     foreach ($files as $file) {
         if (filemtime($file) < $cutoff) {
-            unlink($file);
+            $filename = basename($file);
+            $archive_path = $archive_dir . '/' . $filename;
+
+            // If a file with the same name exists in archive, add timestamp
+            if (file_exists($archive_path)) {
+                $pathinfo = pathinfo($filename);
+                $archive_path = $archive_dir . '/' . $pathinfo['filename'] . '_' . time() . '.' . $pathinfo['extension'];
+            }
+
+            // Move file to archive instead of deleting
+            rename($file, $archive_path);
         }
     }
 }

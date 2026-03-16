@@ -977,29 +977,31 @@ function loadQuizFromServerData(quiz) {
     }
 }
 
+const RECENT_QUIZ_PAGE_SIZE = 10;
+let recentQuizzesVisibleCount = RECENT_QUIZ_PAGE_SIZE;
+
 async function updateRecentQuizzes() {
     const cachedQuizzes = await loadCachedQuizzes();
     const recentQuizzesContainer = document.getElementById('recent-quizzes');
-    
+
     if (recentQuizzesContainer) {
         recentQuizzesContainer.innerHTML = '';
-        
+
         if (cachedQuizzes.length === 0) {
             recentQuizzesContainer.innerHTML = '<p>No recent quizzes found</p>';
             return;
         }
-        
+
         // Create a list of recent quizzes
         const quizList = document.createElement('div');
         quizList.className = 'recent-quiz-list';
-        
+
         // The quizzes should already be sorted by the server, but we'll sort them again just to be sure
         // Sort by timestamp in descending order (newest first)
         const sortedQuizzes = [...cachedQuizzes].sort((a, b) => b.timestamp - a.timestamp);
-        
-        // Only show up to 10 most recent quizzes (increased from 5)
-        const recentQuizzes = sortedQuizzes.slice(0, 10);
-        
+
+        const recentQuizzes = sortedQuizzes.slice(0, recentQuizzesVisibleCount);
+
         recentQuizzes.forEach(quiz => {
             const quizItem = document.createElement('div');
             quizItem.className = 'recent-quiz-item';
@@ -1028,14 +1030,26 @@ async function updateRecentQuizzes() {
 
             quizList.appendChild(quizItem);
         });
-        
+
         recentQuizzesContainer.appendChild(quizList);
-        
+
+        // Add "Load more" button if there are more quizzes
+        if (sortedQuizzes.length > recentQuizzesVisibleCount) {
+            const loadMoreBtn = document.createElement('button');
+            loadMoreBtn.className = 'load-more-btn';
+            loadMoreBtn.textContent = `Load more (${sortedQuizzes.length - recentQuizzesVisibleCount} remaining)`;
+            loadMoreBtn.addEventListener('click', () => {
+                recentQuizzesVisibleCount += RECENT_QUIZ_PAGE_SIZE;
+                updateRecentQuizzes();
+            });
+            recentQuizzesContainer.appendChild(loadMoreBtn);
+        }
+
         // Add event listeners to the load buttons
         document.querySelectorAll('.load-quiz-btn').forEach(button => {
             button.addEventListener('click', function() {
                 const quizId = this.getAttribute('data-id');
-                const quiz = recentQuizzes.find(q => q.id === parseInt(quizId) || q.id === quizId);
+                const quiz = sortedQuizzes.find(q => q.id === parseInt(quizId) || q.id === quizId);
                 if (quiz) {
                     loadQuizFromServerData(quiz);
                 }
@@ -1093,7 +1107,8 @@ async function cacheQuiz(jsonData) {
         
         const result = await response.json();
         if (result.status === 'success') {
-            // Update the UI
+            // Update the UI (reset pagination so newest quiz is visible)
+            recentQuizzesVisibleCount = RECENT_QUIZ_PAGE_SIZE;
             updateRecentQuizzes();
             return true;
         } else {
